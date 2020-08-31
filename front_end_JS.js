@@ -1,14 +1,12 @@
 "use strict";
 (function() {
     const activeBrowser = ()=>{
-        //_.emit('start')
         self_node.active = true
-        //_.emit('currentPlayers')
-        //activate for agar
+        _.emit('begin_state')
     }
     const inactiveBrowser = ()=>{
         self_node.active = false
-        //_.emit('start')
+        _.emit('end_state')
     }
     window.addEventListener('focus', activeBrowser);
     window.addEventListener('blur', inactiveBrowser);
@@ -35,7 +33,8 @@
     favicon.rel = 'shortcut icon'
     document.head.appendChild(favicon);
 
-    _.on('cdc', ()=>{//window.location.reload()
+    _.on('cdc', ()=>{
+        window.location.reload()
     }
     )
     const $ = ($)=>{
@@ -130,15 +129,15 @@
         const expires = "expires=" + d.toUTCString();
         document.cookie = "share=" + false + ";" + expires + ";path=/";
         if (username) {
-            _.emit('get_shared_content', JSON.stringify({
+            _.emit('shared_content', JSON.stringify({
                 b: post,
                 source: 'timeline',
                 c: username
             }))
         }
-        //else{
-        _.emit('start')
-        //}
+        else{
+        _.emit('begin_state')
+        }
     } else {
         const d = new Date();
         d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
@@ -148,7 +147,7 @@
     }
 
     let ptlr = false, c__rendered = undefined, typing_msg_state = false, gc_state = false, gc_gt_state = false, gc_type_selection, settings_track = false, msg_ops_exp_state = false, pstt = false, active = null, m_t = true, mess_rendered = false, prevCSpos, typing_msg, search_data, r_pro, $user, $self_following, $self_followers, $title
-    //const uploader = new SocketIOFileUpload(_)
+    const uploader = new SocketIOFileUpload(_)
     const comment_uploader = new SocketIOFileUpload(_)
     const main_uploader = new SocketIOFileUpload(_)
     const message_uploader = new SocketIOFileUpload(_)
@@ -2236,7 +2235,7 @@
     );
 
     const appendVideo = (video)=>{
-        //document.body.appendChild(video)
+        document.body.appendChild(video)
         node.main.appendChild(video)
     }
 
@@ -2260,7 +2259,7 @@
 
     _.on('incoming_call', (data)=>{
         data = JSON.parse(data)
-        // _.emit('ringing',JSON.stringify(data))
+         _.emit('ringing',JSON.stringify(data))
         const profile_img = $({
             a: 'img',
             class: "profile_img"
@@ -2274,13 +2273,13 @@
             document.body.removeChild(incoming_call_div)
         }
         accept_call.onclick = ()=>{
-            // await navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:'user',minWidth:1280,minHeight:720,width:window.innerWidth,height:window.innerHeight,minAspectRatio:1.77}}).then((stream)=>{
-            // video.srcObject = stream;
-            //_.emit('broadcaster')
-            // stop('audio')
+             await navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:'user',minWidth:1280,minHeight:720,width:window.innerWidth,height:window.innerHeight,minAspectRatio:1.77}}).then((stream)=>{
+             video.srcObject = stream;
+            _.emit('broadcaster')
+             stop('audio')
             appendVideo(videoDiv)
-            //_.emit('call')
-            //});
+            _.emit('call')
+            });
             _.emit('accept_call', JSON.stringify(data))
             document.body.removeChild(incoming_call_div)
         }
@@ -3997,14 +3996,13 @@
             class: "wrap"
         })
         let node_, upvotes = 0, downvotes = 0
-        //if(!window[key]){
+        if(!window[key]){
         window[key] = $({
             a: "div",
             class: "image"
         })
         window[key].appendChild(wrapper)
         if (message) {
-            /*
           if(message.length >= 21){
             if(message.substring(0,23) == "https://www.youtube.com"){
               const vid =  message.replace("watch?v=", "embed/");
@@ -4021,7 +4019,6 @@
             console.log(message.substring(0,23))
           }
           else{
-            */
             let i = 0;
             const il = message.length;
             const d9 = $({
@@ -4080,7 +4077,7 @@
                 captionLabel.innerHTML += message.slice(lastHashtagEndPos, message.length);
             }
             wrapper.appendChild(d9)
-            //}
+            }
         }
         if (data.initial_render == false) {
             timeline_order.unshift(key)
@@ -4101,11 +4098,12 @@
             } else if (source == 'lp') {
                 console.log('sf')
                 node.lppt.appendChild(window[key])
-            } else if (source == 'pro_likes') {//node.profile_likes.insertBefore(window[key],node.pro_top_tl2.nextSibling)
+            } else if (source == 'pro_likes') {
+                node.profile_likes.insertBefore(window[key],node.pro_top_tl2.nextSibling)
             } else if (source == 'timeline') {
                 node.r.appendChild(window[key])
             }
-            //node.r.appendChild(window[key])
+            node.r.appendChild(window[key])
         }
         const d2 = $({
             a: "div",
@@ -4150,7 +4148,6 @@
         }])
 
         d5.onclick = (e)=>{
-
             if (username == data.user) {
                 po_menu.appendChild(delete_post)
                 delete_post.onclick = (e)=>{
@@ -4163,7 +4160,6 @@
                 if (po_menu.contains(delete_post)) {
                     po_menu.removeChild(delete_post)
                 }
-
             }
 
             e.stopPropagation()
@@ -4210,7 +4206,8 @@
                             console.log(';)');
                         }
                         ).catch(console.error);
-                    } else {//shareDialog.classList.add('is-open');
+                    } else {
+                        shareDialog.classList.add('is-open');
                     }
                 }
                 document.body.appendChild(shareDiv)
@@ -4273,7 +4270,7 @@
             window['video' + key].setAttribute('preload', 'auto')
             window['video' + key].setAttribute('playsinline', 'true')
             wrapper.appendChild(window['video' + key])
-            //fetch_data(key,url+'/off/'+key,window['video'+key])
+            fetch_data(key,url+'/video/'+key,window['video'+key])
         }
         if (data.image) {
             const image = $({
@@ -4281,7 +4278,7 @@
                 class: "elements tl_compact",
                 src: url + '/image/' + key
             })
-            //fetch_image_data(key,url+'/off/'+username+'/'+key,image)
+            fetch_image_data(key,url+'/video/'+username+'/'+key,image)
             wrapper.appendChild(image)
             image.onclick = (e)=>{
                 e.stopPropagation()
@@ -4323,7 +4320,7 @@
                 class: "elements audio"
             })
             wrapper.appendChild(audioPostControls)
-            //fetch_data(key,url+'/audio/'+key,window['audio'+key])
+            fetch_data(key,url+'/audio/'+key,window['audio'+key])
             let duration, str
             const scrubDiv = $({
                 a: "div",
@@ -4544,17 +4541,13 @@
             chat(data.key, 'timeline', username)
         }
         loading_bar.style.width = "0%"
-        /*
       }
       else{
-        /*
         if(node.r.contains(window[key])){
           let pos = Array.prototype.indexOf.call(node.r.children, window[key])
           console.log(pos)
           post_timeline_positions.push({key:key,position:pos});
         }
-        */
-        /*
         if(!data.initial_render){
           if(source == 'home'){
             node.profile_timeline.prepend(window[key])
@@ -4565,7 +4558,7 @@
             node.profile_likes.insertBefore(window[key],node.pro_top_tl2.nextSibling)
           }
           else if(source == 'timeline'){
-            //node.r.prepend(window[key])
+            node.r.prepend(window[key])
             node.r.insertBefore(window[key],node.r.children[timeline_order.indexOf(key)])
           }
         }else{
@@ -4577,15 +4570,14 @@
             node.lppt.appendChild(window[key])
         }
         else if(source == 'pro_likes'){
-          //node.profile_likes.insertBefore(window[key],node.pro_top_tl2.nextSibling)
+          node.profile_likes.insertBefore(window[key],node.pro_top_tl2.nextSibling)
         }
         else if(source == 'timeline'){
           node.r.appendChild(window[key])
         }
-           //node.r.appendChild(window[key])
+           node.r.appendChild(window[key])
         }
       }
-      */
     }
     )
 
@@ -4593,7 +4585,6 @@
         const key = JSON.parse(data).key
         if (node.r.contains(window[key])) {
             node.r.removeChild(window[key])
-
         }
         window[key] = undefined
     }
@@ -4647,7 +4638,8 @@
             }
             xOffset = currentX;
             yOffset = currentY;
-            if (vid == true) {// setTranslate(currentX, currentY, video);
+            if (vid == true) {
+                setTranslate(currentX, currentY, video);
             } else {
                 setTranslate(currentX, currentY, dragItem);
             }
@@ -4679,7 +4671,7 @@
         }
     }
     )
-    /*
+    
     _.on('profile_timeline',(data)=>{
         data = JSON.parse(data)
         const key = data.key
@@ -4762,8 +4754,8 @@
         }
         if(message){
             const caption = $({a:"div",class:"post_caption",text:message})
-            //const captionLabel = $({a:'label',text:message})
-            //caption.appendChild(captionLabel)
+            const captionLabel = $({a:'label',text:message})
+            caption.appendChild(captionLabel)
             d1.appendChild(caption)
         }
         if(data.image){
@@ -4785,7 +4777,6 @@
           }else{
 
           }
-
         }
         if(data.video){
           const video = $({a:'video',class:'elements vid bs12',controls:true,autoplay:true,muted:true,loop:true})
@@ -4827,7 +4818,7 @@
             chat(key, 'profile_timeline',username)
         }
     })
-*/
+
     _.on('response_', ()=>{
         const loading_bar = node.loading_bar
         loading_bar.style.width = "0%"
@@ -4959,9 +4950,9 @@
                     class: 'elements_',
                     src: url + '/mess_img/' + data.username + '/' + key + '/' + data.extension_
                 })
-                //fetch_image_data(key,url+'/file_/'+key,media)
+                fetch_image_data(key,url+'/file_/'+key,media)
                 media.onclick = (e)=>{
-                    //node.ex_id.src = url + "/file_/" + key
+                    node.ex_id.src = url + "/file_/" + key
                     node.ex_id.src = url + '/mess_img/' + data.username + '/' + key + '/' + data.extension_
                     if (!node.stage.contains(node.expanded)) {
                         node.stage.appendChild(node.expanded)
@@ -4980,7 +4971,7 @@
                 })
                 window['video_message' + key].setAttribute('playsinline', '')
                 media_div.appendChild(window['video_message' + key])
-                //fetch_data(key,url+"/messageFiles/"+key,window['video_message'+key])
+                fetch_data(key,url+"/messageFiles/"+key,window['video_message'+key])
             } else if (data.audio) {
                 const audio = $({
                     a: 'audio',
@@ -5049,10 +5040,10 @@
                     class: 'elements_',
                     src: url + '/mess_img/' + data.username + '/' + data.key + '/' + data.extension_
                 })
-                //fetch_image_data(key,url+'/file_/'+key,img)
+                fetch_image_data(key,url+'/file_/'+key,img)
                 img.onclick = (e)=>{
                     node.ex_id.src = url + '/mess_img/' + data.username + '/' + data.key + '/' + data.extension_
-                    //fetch_image_data(key,url+'/file_/'+key,node.ex_id)
+                    fetch_image_data(key,url+'/file_/'+key,node.ex_id)
                     if (!node.stage.contains(node.expanded)) {
                         node.stage.appendChild(node.expanded)
                     }
@@ -5076,7 +5067,7 @@
                     src: url + '/mess_video/' + data.username + '/' + data.key + data.extension
                 })
                 window['video_message' + key].setAttribute('playsinline', '')
-                //fetch_data(key,url+"/messageFiles/"+key,window['video_message'+key])
+                fetch_data(key,url+"/messageFiles/"+key,window['video_message'+key])
                 video_div.appendChild(window['video_message' + key])
                 d2.appendChild(video_div)
                 d1.appendChild(d2)
@@ -5474,7 +5465,7 @@
                     src: url + '/video/' + data.user + '/' + key + data.extension
                 })
                 window['post_preview_video' + key].setAttribute('playsinline', '')
-                //fetch_data(key,url+"/temp_file/"+key,window['post_preview_video'+key])
+                fetch_data(key,url+"/temp_file/"+key,window['post_preview_video'+key])
                 media = window['post_preview_video' + key]
             } else if (data.audio) {
                 window['post_preview_audio' + key] = $({
@@ -5483,7 +5474,7 @@
                     controls: true,
                     src: url + '/audio/' + data.user + '/' + key + data.extension
                 })
-                //fetch_data(key,url+"/temp_file/"+key,window['post_preview_audio'+key])
+                fetch_data(key,url+"/temp_file/"+key,window['post_preview_audio'+key])
             }
             const div1 = $({
                 a: 'div',
@@ -5556,7 +5547,7 @@
                 class: "img_prev1",
                 src: url + '/temp_comments/' + key
             })
-            //fetch_image_data(key,url+'/temp_comm_file/'+key,media)
+            fetch_image_data(key,url+'/temp_comm_file/'+key,media)
         } else if (data.video) {
             window['comm_preview_video' + key] = $({
                 a: 'video',
@@ -5568,7 +5559,7 @@
                 src: url + '/video_comm/' + data.user + '/' + data.key + data.extension
             })
             window['comm_preview_video' + key].setAttribute('playsinline', '')
-            //fetch_data(key,url+"/temp_comm_file/"+key,window['comm_preview_video'+key])
+            fetch_data(key,url+"/temp_comm_file/"+key,window['comm_preview_video'+key])
             media = window['comm_preview_video' + key]
         } else if (data.audio) {
             window['comm_preview_audio' + key] = $({
@@ -5577,7 +5568,7 @@
                 controls: true,
                 src: url + '/audio_comm/' + data.user + '/' + data.key + data.extension
             })
-            //fetch_data(key,url+"/temp_comm_file/"+key,window['comm_preview_audio'+key])
+            fetch_data(key,url+"/temp_comm_file/"+key,window['comm_preview_audio'+key])
         }
         const div1 = $({
             a: 'div',
@@ -5953,8 +5944,7 @@
                         src: url + '/video/' + data.username + '/' + data.key + data.extension
                     })
                     window[video_key].setAttribute('playsinline', '')
-
-                    //fetch_data(key,url+'/off/'+key,window[video_key])
+                    fetch_data(key,url+'/off/'+key,window[video_key])
                 }
 
                 c_node.img_bg12.appendChild(window[video_key])
@@ -5972,11 +5962,11 @@
                 if (c_node.img_bg12.contains(c_node.video)) {
                     c_node.img_bg12.removeChild(c_node.video)
                 }
-                //fetch_image_data(key,url+'/off/'+data.key,c_node.image)
+                fetch_image_data(key,url+'/off/'+data.key,c_node.image)
                 c_node.image.src = url + '/image/' + key
                 c_node.image.onclick = (e)=>{
                     e.stopPropagation();
-                    //make this use blobKeyURL thingy fetch_image_data:
+                    //use blobKeyURL to fetch_image_data:
                     expandKey({
                         a: data.key,
                         b: node.expanded,
@@ -5994,7 +5984,7 @@
                     c_node.img_bg12.removeChild(c_node.video)
                 }
                 c_node.audio.src = url + '/audio/' + data.username + '/' + data.key + data.extension
-                //fetch_data(key,url+'/off/'+data.key,c_node.audio)
+                fetch_data(key,url+'/off/'+data.key,c_node.audio)
             } else {
                 if (c_node.img_bg12.contains(c_node.image)) {
                     c_node.img_bg12.removeChild(c_node.image)
@@ -6030,7 +6020,7 @@
             window[key + 'comm_dc'].textContent = downvotes
             set_pro_data(user, url + "/files/" + user, c_node.profile_img2)
             c_node.profile_img2.onclick = ()=>{
-                //window[post_key].appendChild(window[video_key])
+                window[post_key].appendChild(window[video_key])
                 _l_p(user, false);
             }
             c_node.send.onclick = ()=>{
@@ -6172,7 +6162,7 @@
                         loop: true,
                         src: url + '/video_comm/' + data.username + '/' + data.mediaKey + data.extension
                     })
-                    //fetch_data(data.mediaKey,url+'/comm_media/'+data.mediaKey,video)
+                    fetch_data(data.mediaKey,url+'/comm_media/'+data.mediaKey,video)
                     commentWrap.appendChild(video)
                 }
                 if (audio) {
@@ -6225,7 +6215,6 @@
     }
     )
 
-    /*
     _.on('render_comment', (a)=>{
         const raw_data = JSON.parse(a).a,
         data = raw_data[0]
@@ -6396,7 +6385,6 @@
         }
       }
     })
-    */
 
     const p_node = {
         d1: $({
@@ -6447,8 +6435,6 @@
         if (node.main.contains(node.expanded2)) {
             node.main.removeChild(node.expanded2)
         }
-        //_.emit('start')
-        /*
       console.log(post_timeline_positions)
       post_timeline_positions.sort(function (a, b) {
   return a.position - b.position;
@@ -6464,8 +6450,7 @@
         }
       }
       post_timeline_positions = []
-*/
-        //document.body.removeChild(document.body.children[pos])
+      document.body.removeChild(document.body.children[pos])
     }
     p_node.d1.appendChild(p_node.close)
 
@@ -10478,7 +10463,8 @@
         center.appendChild(iq_node.banner)
     }
 
-    _.on('invalidSocket', ()=>{//location.reload()
+    _.on('invalidSocket', ()=>{
+        location.reload()
     }
     )
 }
